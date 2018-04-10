@@ -1,7 +1,7 @@
 # WhatLooksGood
 John Dimm
 
-Browse dishes and restaurants using photos from the [Yelp Data Challenge](https://www.yelp.com/dataset/challenge).    
+Browse dishes and restaurants using photos from the [Yelp Dataset Challenge](https://www.yelp.com/dataset/challenge).    
 
 http://www.johndimm.com/yelp_db_caption/app/
 
