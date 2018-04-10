@@ -5,15 +5,15 @@ http://www.johndimm.com/yelp_db_caption/app/
 
 ## Motivation
 
-We want pancakes, so we search breakfast places and scan the photos to see who has the best looking pancakes.  From the restaurant search results page, we click a link, go down to the restaurant page, and from there click on a photo. Click next and skip past all the non-pancakes.  To go to the next restaurant, it's back up twice and down a different path.  It would be so much easier if we could see pictures of pancakes from different restaurants on the same page.  
+We want pancakes, so we search breakfast places and scan the photos to see who has the best looking pancakes. It would be so much easier if we could see pictures of pancakes from different restaurants on the same page.   Instead, from the restaurant search results page, we click a link, go down to the restaurant page, and from there click on a photo. Click next and skip past all the non-pancakes.  To go to the next restaurant, it's back up twice and down a different path.  
 
 I want to start my exploration of dining options by asking what we want to eat, not where.
 
 ## Cheap trick
 
-For this to work, we need to know the object that is shown in a photo.  It turns out there is a very effective and simple method that produces remarkably clean data with little effort, given this particular set of yelp photos. 
+For this to work, we need to know the object that is shown in a photo.  It turns out there is a very effective and simple method that produces remarkably clean data with little effort, given this particular set of photos. 
 
-The cheap trick is to notice that although some people write a comment in caption of a photo, others people are not very creative when they make up a caption photo.  They just say what it is.   That is a lucky win-win -- the user saves mental energy, we get useful data.
+The cheap trick is to notice that although some people write a comment in the caption of a photo, others are not so creative.  They just say what it is.   That is a lucky win-win -- the user saves mental energy, we get useful data.
 
 The first step in extracting a list of dishes is to look for multiple captions that match exactly.  If two people have captioned a picture "spam musubi" and posted it to yelp as a food picture, we assume spam musubi is a dish.  What could go wrong?
 
@@ -37,10 +37,10 @@ For a dish, we want to show all the photos of the dish taken at various restaura
 A simple way of recommending movies that are similar to a given movie:
 
   - find all the people who liked the movie
-  - count all the other movies those people liked
+  - count up all the other movies those people liked
   - compare counts to global counts
   - show the ones that are disproportionately represented 
   
-That depends on a single relationship, the one between people and movies.  We have a different one here, between dishes and restaurants, but can apply the same technique.  We can also do it both ways.  We get similar dishes using dish-restaurant-dish and we get similar restaurants using restaurant-dish-restaurant.
+That depends on a single relationship, the one between people and movies.  We have a different one here, between dishes and restaurants, but can apply the same technique.  We can also do it both ways, getting similar dishes using dish-restaurant-dish and similar restaurants using restaurant-dish-restaurant.
 
 
