@@ -5,6 +5,8 @@ Browse dishes and restaurants using photos from the [Yelp Dataset Challenge](htt
 
 http://www.johndimm.com/yelp_db_caption/app/
 
+![screen shot](http://www.johndimm.com/yelp_db_caption/app/WhatLooksGood_screenshot.png)
+
 ## Motivation
 
 We want pancakes, so we search breakfast places and scan the photos to see who has the best looking pancakes. It would be so much easier if we could see pictures of pancakes from different restaurants on the same page.   Instead, from the restaurant search results page, we click a link, go down to the restaurant page, and from there click on a photo. Click next and skip past all the non-pancakes.  To go to the next restaurant, it's back up twice and down a different path.  
