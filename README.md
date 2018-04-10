@@ -23,16 +23,15 @@ The first step in extracting a list of dishes is to look for multiple captions t
 
 The second step is to expand that list by looking for noun phrases in captions.  If a caption has a single noun phrase, and there are multiple captions containing the same single noun phrase, assume it is a dish.
 
-## Search captions for dishes
+## The concept of dish
 
-Scan the full set of photo captions, looking for captions that contain any of these dishes. 
-This establishes the concept of a dish, and some good examples, but we have very low recall. We are missing all the captions that contain the core dishes we found in steps 1 and 2.  Add them by scanning the full set of photo captions.  The photo also gives us the restaurant where the picture was taken.
+We have a list of strings that appear to be menu items or dishes.  To apply that information to the full set of captions, search every dish in each caption.  The photo caption also gives the restaurant where the picture was taken.
 
-## The concept of a dish
+## Restaurants serve dishes
 
 We now have a set of core dish names along with their photos and restaurants.  We could make a search interface.  But that is likely to be frustratingly sparse.  Can we provide interesting links so you don't miss searching?
 
-For a dish, we want to show all the photos of the dish taken at various restaurants.  You can click on a restaurant to switch to the restaurant view, where the photos are of all dishes offered at the restaurant (at least the ones that have been photographed and nicely captioned).  But it will be easy to get stuck in a rut.  We need something more to browse quickly.  We need related restaurants and related dishes.
+For a dish, it's clear that we want to show all the photos of the dish taken at various restaurants.  You can click on a restaurant to switch to the restaurant view, where the photos are of all dishes offered at the restaurant (at least the ones that have been photographed and nicely captioned).  But it will be easy to get stuck in a rut.  We need something more, some way of changing the subject without starting a new session.  We need related restaurants and related dishes.
 
 ## Recommendations
 
@@ -43,6 +42,6 @@ A simple way of recommending movies that are similar to a given movie:
   - compare counts to global counts
   - show the ones that are disproportionately represented 
   
-That depends on a single relationship, the one between people and movies.  We have a different one here, between dishes and restaurants, but can apply the same technique.  We can also do it both ways, getting similar dishes using dish-restaurant-dish and similar restaurants using restaurant-dish-restaurant.
+That depends on a single relationship, the "like" relation between people and movies.  We have a different one here, between dishes and restaurants, but can apply the same technique.  We can also do it both ways, getting similar dishes using dish-restaurant-dish and similar restaurants using restaurant-dish-restaurant.
 
 
