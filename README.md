@@ -247,6 +247,10 @@ The normalized counts:
         | mixed fajitas   |           1 |            4 |                    224 |
         +-----------------+-------------+--------------+------------------------+
         
+As a graph, we're interested in the relative sizes of the blue and red bars:
+
+<img src="http://www.johndimm.com/yelp_db_caption/app/fried_avocado.png" />
+
 To find the most interested related dishes, we look at the percent difference between local and global counts.
    
         (normalized_local_count - global_count) / global_count as score
