@@ -176,7 +176,9 @@ What dishes are offered by all three?  We also count the number of photos taken,
         | pork taco       |   1 |
         +-----------------+-----+
         
-No surprize that tacos tops the list.  But we are looking for dishes that are disproportionately represented in this list.  So let's pull the global counts for these dishes, across all restaurants in the corpus:
+No surprize that tacos tops the list.  we are looking for dishes that are *disproportionately* represented in this list.  Tacos are all over the place.  What is special about restaurants that offer fried avocado?  
+
+Let's pull the global counts for these dishes, across all restaurants in the corpus:
  
          +-----------------+-------------+--------------+
         | dish            | local_count | global_count |
