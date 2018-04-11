@@ -106,4 +106,180 @@ A simple way of recommending movies that are similar to a given movie:
   
 That depends on a single relationship, the "like" relation between people and movies.  We have a different one here, between dishes and restaurants, but can apply the same technique.  We can also do it both ways, getting similar dishes using dish-restaurant-dish and similar restaurants using restaurant-dish-restaurant.
 
+## Example of dish-to-dish recommendations
 
+Let's go through the details of finding recommended dishes.  To keep the data from exploding, we'll pick one of these dishes offered at only three restaurants:
+
+        +-----------------------+---------+-----+
+        | dish                  | dish_id | cnt |
+        +-----------------------+---------+-----+
+        | fried avocado         |     827 |   3 |
+        | slider trio           |     835 |   3 |
+        | nachos grande         |     838 |   3 |
+        | lemongrass soup       |     841 |   3 |
+        | vegetable pakoras     |     845 |   3 |
+        | delicious desserts    |     853 |   3 |
+        | poki bowl             |     865 |   3 |
+        | canadian pizza        |     878 |   3 |
+        | mixed paella          |     889 |   3 |
+        | table bread           |     890 |   3 |
+        | pappardelle bolognese |     891 |   3 |
+        | ikura nigiri          |     904 |   3 |
+        | nabeyaki udon         |     905 |   3 |
+        | dahi puri             |     925 |   3 |
+        | cauliflower steak     |     928 |   3 |
+        | asparagus bacon       |     939 |   3 |
+        | pizza fries           |     948 |   3 |
+        | quinoa burger         |     949 |   3 |
+        | chicken risotto       |     953 |   3 |
+        | bruschetta trio       |     958 |   3 |
+        +-----------------------+---------+-----+
+
+We pick fried avocado.  Here are the three restaurants:
+
+        +------------------------+
+        | name                   |
+        +------------------------+
+        | Macayo's Mexican Table |
+        | El Hefe                |
+        | Jalisco Cantina        |
+        +------------------------+
+
+What dishes are offered by all three?  We also count the number of photos taken, across the three restaurants.
+
+        +-----------------+-----+
+        | dish            | cnt |
+        +-----------------+-----+
+        | Tacos           |   6 |
+        | carne asada     |   5 |
+        | carnitas        |   3 |
+        | fried avocado   |   3 |
+        | cheese crisp    |   2 |
+        | Fish taco       |   2 |
+        | mexican pizza   |   2 |
+        | Shrimp          |   2 |
+        | taco salad      |   1 |
+        | chicken taco    |   1 |
+        | Fish tacos      |   1 |
+        | mixed fajitas   |   1 |
+        | combo plate     |   1 |
+        | fiesta salad    |   1 |
+        | Burger          |   1 |
+        | Nachos          |   1 |
+        | i love          |   1 |
+        | al pastor       |   1 |
+        | fried fish      |   1 |
+        | grilled chicken |   1 |
+        | duck carnitas   |   1 |
+        | Pork Carnitas   |   1 |
+        | Food            |   1 |
+        | pork taco       |   1 |
+        +-----------------+-----+
+        
+No surprize that tacos tops the list.  But we are looking for dishes that are disproportionately represented in this list.  So let's pull the global counts for these dishes, across all restaurants in the corpus:
+ 
+         +-----------------+-------------+--------------+
+        | dish            | local_count | global_count |
+        +-----------------+-------------+--------------+
+        | Tacos           |           6 |          908 |
+        | carne asada     |           5 |          187 |
+        | carnitas        |           3 |          114 |
+        | fried avocado   |           3 |            3 |
+        | Shrimp          |           2 |         2440 |
+        | Fish taco       |           2 |          200 |
+        | mexican pizza   |           2 |            5 |
+        | cheese crisp    |           2 |           24 |
+        | Burger          |           1 |         2095 |
+        | Fish tacos      |           1 |          131 |
+        | Nachos          |           1 |          342 |
+        | Pork Carnitas   |           1 |           15 |
+        | Food            |           1 |         2026 |
+        | taco salad      |           1 |           23 |
+        | al pastor       |           1 |           89 |
+        | chicken taco    |           1 |           63 |
+        | combo plate     |           1 |           17 |
+        | pork taco       |           1 |           33 |
+        | fried fish      |           1 |           38 |
+        | grilled chicken |           1 |          224 |
+        | duck carnitas   |           1 |            5 |
+        | fiesta salad    |           1 |            8 |
+        | i love          |           1 |          178 |
+        | mixed fajitas   |           1 |            4 |
+        +-----------------+-------------+--------------+
+
+The strategy we use now is to scale the local counts to match the global counts.  We pretend that these dishes are the only dishes in the database.
+
+         #
+         # Normalize local counts so they can be compared to global counts.
+         #
+         set @local_total = (select sum(local_count) from related_dish_cnt);
+         set @global_total = (select sum(global_count) from related_dish_cnt);
+         set @factor = @global_total / @local_total;
+
+The normalized counts:
+
+        +-----------------+-------------+--------------+------------------------+
+        | dish            | local_count | global_count | normalized_local_count |
+        +-----------------+-------------+--------------+------------------------+
+        | Tacos           |           6 |          908 |                   1342 |
+        | carne asada     |           5 |          187 |                   1119 |
+        | carnitas        |           3 |          114 |                    671 |
+        | fried avocado   |           3 |            3 |                    671 |
+        | Shrimp          |           2 |         2440 |                    447 |
+        | Fish taco       |           2 |          200 |                    447 |
+        | mexican pizza   |           2 |            5 |                    447 |
+        | cheese crisp    |           2 |           24 |                    447 |
+        | Burger          |           1 |         2095 |                    224 |
+        | Fish tacos      |           1 |          131 |                    224 |
+        | Nachos          |           1 |          342 |                    224 |
+        | Pork Carnitas   |           1 |           15 |                    224 |
+        | Food            |           1 |         2026 |                    224 |
+        | taco salad      |           1 |           23 |                    224 |
+        | al pastor       |           1 |           89 |                    224 |
+        | chicken taco    |           1 |           63 |                    224 |
+        | combo plate     |           1 |           17 |                    224 |
+        | pork taco       |           1 |           33 |                    224 |
+        | fried fish      |           1 |           38 |                    224 |
+        | grilled chicken |           1 |          224 |                    224 |
+        | duck carnitas   |           1 |            5 |                    224 |
+        | fiesta salad    |           1 |            8 |                    224 |
+        | i love          |           1 |          178 |                    224 |
+        | mixed fajitas   |           1 |            4 |                    224 |
+        +-----------------+-------------+--------------+------------------------+
+        
+To find the most interested related dishes, we look at the percent difference between local and global counts.
+   
+        (normalized_local_count - global_count) / global_count as best
+  
+Finally, we get this list of recommended dishes.  It turns out the mexican pizza is at the top, even though there are only 2 photos of it across these three restaurants.  That's mainly because there are only 5 photos across all restaurants.  
+  
+          +-----------------+----------+
+        | dish            | best     |
+        +-----------------+----------+
+        | fried avocado   | 222.6667 |
+        | mexican pizza   |  88.4000 |
+        | mixed fajitas   |  55.0000 |
+        | duck carnitas   |  43.8000 |
+        | fiesta salad    |  27.0000 |
+        | cheese crisp    |  17.6250 |
+        | Pork Carnitas   |  13.9333 |
+        | combo plate     |  12.1765 |
+        | taco salad      |   8.7391 |
+        | pork taco       |   5.7879 |
+        | carne asada     |   4.9840 |
+        | fried fish      |   4.8947 |
+        | carnitas        |   4.8860 |
+        | chicken taco    |   2.5556 |
+        | al pastor       |   1.5169 |
+        | Fish taco       |   1.2350 |
+        | Fish tacos      |   0.7099 |
+        | Tacos           |   0.4780 |
+        | i love          |   0.2584 |
+        | grilled chicken |   0.0000 |
+        | Nachos          |  -0.3450 |
+        | Shrimp          |  -0.8168 |
+        | Food            |  -0.8894 |
+        | Burger          |  -0.8931 |
+        +-----------------+----------+
+  
+   
