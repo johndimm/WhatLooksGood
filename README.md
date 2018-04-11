@@ -249,12 +249,12 @@ The normalized counts:
         
 To find the most interested related dishes, we look at the percent difference between local and global counts.
    
-        (normalized_local_count - global_count) / global_count as best
+        (normalized_local_count - global_count) / global_count as score
   
 Finally, we get this list of recommended dishes.  It turns out the mexican pizza is at the top, even though there are only 2 photos of it across these three restaurants.  That's mainly because there are only 5 photos across all restaurants.  
   
-          +-----------------+----------+
-        | dish            | best     |
+        +-----------------+----------+
+        | dish            | score    |
         +-----------------+----------+
         | fried avocado   | 222.6667 |
         | mexican pizza   |  88.4000 |
