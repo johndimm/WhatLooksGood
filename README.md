@@ -15,7 +15,8 @@ I want to start my exploration of dining options by asking *what* we want to eat
 
 ## Cheap trick
 
-For this to work, we need to know the object that is shown in a photo.  It turns out there is a very effective and simple method that produces remarkably clean data with little effort, given this particular set of photos. 
+For this to work, we need to know the object that is shown in a photo.  Object recognition by computer vision is one option.  
+It turns out there is a very effective and simple method that produces remarkably clean data with little effort, given this particular set of photos. 
 
 The cheap trick is to notice that although some people write a comment in the caption of a photo, others are not so creative.  They just say what it is.   
 
@@ -23,7 +24,7 @@ The cheap trick is to notice that although some people write a comment in the ca
 
 That is a lucky win-win -- the user saves mental energy, we get useful data.
 
-The first step in extracting a list of dishes is to look for multiple captions that match exactly.  If two people have captioned a picture "spam musubi" and posted it to yelp as a food picture, we assume spam musubi is a dish.  What could go wrong?
+The first step in extracting a list of dishes is to look for multiple captions that match exactly.  If two people have captioned a picture "spam musubi" and posted it to yelp as a food picture, we assume spam musubi is a dish.  What could go wrong?  We found 130 of these.
 
     +----+-----------------+--------+
     | id | dish            | source |
@@ -42,7 +43,7 @@ The first step in extracting a list of dishes is to look for multiple captions t
 
 ## Natural Language Processing
 
-The second step is to expand that list by looking for noun phrases in captions.  If a caption has a single noun phrase, and there are multiple captions containing the same single noun phrase, assume it is a dish.
+The second step is to expand that list by looking for noun phrases in captions.  If a caption has a single noun phrase, and there are multiple captions containing the same single noun phrase, assume it is a dish.  Using the NLTK for Python, we found 2,131 of these.
 
     +-----+------------------+-----------+
     | id  | dish             | source    |
@@ -60,7 +61,7 @@ The second step is to expand that list by looking for noun phrases in captions. 
 
 ## The concept of dish
 
-We have a list of strings that appear to be menu items or dishes.  To apply that information to the full set of captions, search every dish in each caption.  The photo caption also gives the restaurant where the picture was taken.
+We have a list of strings that appear to be menu items or dishes.  To apply that information to the full set of captions, search every dish in each caption.  The photo caption also gives the restaurant where the picture was taken.  We found 63,922 of these.
 
     +----+------------------------+---------+-----------+------------------------+---------+
     | id | business_id            | dish_id | source    | photo_id               | matched |
