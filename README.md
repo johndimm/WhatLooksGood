@@ -1,7 +1,7 @@
 # WhatLooksGood
 John Dimm
 
-Browse dishes and restaurants through photos from the [Yelp Dataset Challenge](https://www.yelp.com/dataset/challenge).  The model uses co-occurrence of phrases in caption text to identify objects.  It finds related restaurants and related dishes by expanding the relation between restaurants and their dishes. 
+Browse dishes and restaurants from the [Yelp Dataset Challenge](https://www.yelp.com/dataset/challenge).  The model is created using only caption text, not the actual photographs.  It identifies objects from the co-occurrence of phrases in caption text.  It builds two recommender systems on the binary relation between restaurants and their dishes. 
 
 http://www.johndimm.com/yelp_db_caption/app/
 
@@ -9,7 +9,7 @@ http://www.johndimm.com/yelp_db_caption/app/
 
 ## Motivation
 
-We want pancakes, so we search breakfast places and scan the photos to see who has the best looking pancakes. It would be so much easier if we could see pictures of pancakes from different restaurants on the same page.   Instead, from the restaurant search results page, we click a link, go down to the restaurant page, and from there click on a photo. Click next and skip past all the non-pancakes.  To go to the next restaurant, it's back up twice and down a different path.  
+We want pancakes, so we search breakfast places and scan the photos to see who has the best looking pancakes. It would be so much easier if we could see pictures of pancakes from different restaurants on the same page.  
 
 I want to start my exploration of dining options by asking *what* we want to eat, not *where*.
 
