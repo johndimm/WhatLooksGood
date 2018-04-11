@@ -9,16 +9,19 @@ http://www.johndimm.com/yelp_db_caption/app/
 
 ## Motivation
 
-We want pancakes, so we search breakfast places and scan the photos to see who has the best looking pancakes. It would be so much easier if we could see pictures of pancakes from different restaurants on the same page.  
+You are hungry for pancakes, so you search breakfast places and scan the photos to see who has the best looking pancakes.  Lots of clicks and navigation.  It would be so much easier if you could see pictures of pancakes from different restaurants on the same page.  
 
 I want to start my exploration of dining options by asking *what* we want to eat, not *where*.
 
-## Cheap trick
+## The concept of dish
 
-For this to work, we need to know the object that is shown in a photo.  Object recognition by computer vision is one option.  
-It turns out there is a very effective and simple method that produces remarkably clean data with little effort, given this particular set of photos. 
+For this to work, we need to know the object that is shown in a photo.  Photo captions are too specific, often unique.  We need to find a way to extract something that will be the same across multiple restaurants.
 
-The cheap trick is to notice that although some people write a comment in the caption of a photo, others are not so creative.  They just say what it is.   
+How can we know what a photo is a photo *of*?  Object recognition by computer vision is one option.  
+
+It turns out there is a very effective and simple method that produces remarkably clean data with little effort, given this particular set of photos.  
+
+The cheap trick is to notice that although some people write a comment in the caption of a photo, others are not as creative.  They just say what it is.   
 
 ![lobster roll](http://www.johndimm.com/yelp_db_caption/app/lobster_roll.png)
 
@@ -59,9 +62,9 @@ The second step is to expand that list by looking for noun phrases in captions. 
     | 139 | pork sandwich    | substring |
     | 140 | spring rolls     | substring |
 
-## The concept of dish
+## Extending the dish concept
 
-We have a list of strings that appear to be menu items or dishes.  To apply that information to the full set of captions, search every dish in each caption.  The photo caption also gives the restaurant where the picture was taken.  We found 63,922 of these.
+We have a list of strings that appear to be menu items or dishes.  To apply that information to the full set of captions, search every dish in each caption. If a caption contains the word "burger", we assume it can be usefully shown on the Burger page, even if it does not contain a burger.  (It turns out these exceptions are rare.)  The photo caption also helps out by providing the restaurant where the picture was taken.  We found 63,922 of these matches.
 
     +----+------------------------+---------+-----------+------------------------+---------+
     | id | business_id            | dish_id | source    | photo_id               | matched |
@@ -80,9 +83,9 @@ We have a list of strings that appear to be menu items or dishes.  To apply that
 
 ## Restaurants serve dishes
 
-We now have a set of core dish names along with their photos and restaurants.  We could make a search interface.  But the search space is likely to be frustratingly sparse.  Many reasonable queries would give a null response.  
+We now have a set of core dish names along with their photos and restaurants.  We could create a standard search interface.  But the search space is likely to be frustratingly sparse.  Many reasonable queries would give a null response.  
 
-Restaurant search is provided already by yelp.  In this UI, we want, we want to suggest connections rather than requiring you to find them.    
+Restaurant search is provided already by yelp.  In this UI, we want to suggest interesting connections rather than requiring you to find them.    
 
 Two obvious lists:
 
@@ -90,7 +93,7 @@ Two obvious lists:
   
   - For a restaurant, it's clear we want to show all the dishs available at that restaurant.
   
-Beyond these, we need some way to move directly from one restaurant to another related restaurant.  Same for dishes.
+Beyond these, we need some way to move directly from one restaurant to another related restaurant.  Same for dishes.  
 
 ## Recommendations
 
