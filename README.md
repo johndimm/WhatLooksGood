@@ -5,7 +5,7 @@ Browse dishes and restaurants from the [Yelp Dataset Challenge](https://www.yelp
 
 http://www.johndimm.com/yelp_db_caption/app/
 
-![screen shot](http://www.johndimm.com/yelp_db_caption/app/WhatLooksGood_screenshot.png)
+<img src="http://www.johndimm.com/yelp_db_caption/app/WhatLooksGood_screenshot.png" width=600 />
 
 ## Motivation
 
@@ -80,9 +80,17 @@ We have a list of strings that appear to be menu items or dishes.  To apply that
 
 ## Restaurants serve dishes
 
-We now have a set of core dish names along with their photos and restaurants.  We could make a search interface.  But that is likely to be frustratingly sparse.  Many reasonable queries would give a null response.  Can we provide interesting links so you don't miss searching?
+We now have a set of core dish names along with their photos and restaurants.  We could make a search interface.  But the search space is likely to be frustratingly sparse.  Many reasonable queries would give a null response.  
 
-For a dish, it's clear that we want to show all the photos of the dish taken at various restaurants.  You can click on a restaurant to switch to the restaurant view, where the photos are of all dishes offered at the restaurant (at least the ones that have been photographed and nicely captioned).  But it will be easy to get stuck in a rut.  We need something more, some way of changing the subject without starting a new session.  We need related restaurants and related dishes.
+Restaurant search is provided already by yelp.  In this UI, we want, we want to suggest connections rather than requiring you to find them.    
+
+Two obvious lists:
+
+  - For a dish, it's clear we want to show all the photos of the dish taken at various restaurants.  
+  
+  - For a restaurant, it's clear we want to show all the dishs available at that restaurant.
+  
+Beyond these, we need some way to move directly from one restaurant to another related restaurant.  Same for dishes.
 
 ## Recommendations
 
