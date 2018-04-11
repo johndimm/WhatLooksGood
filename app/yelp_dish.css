@@ -1,0 +1,144 @@
+
+.BusinessDish, .SampleBusinessDish, .JustDish {
+  float:left;
+  width: 250px;
+  height: 230px;
+  margin: 20px;
+  padding: 20px;
+  background-color: lightgray;
+  text-align: center;
+  font-family:Helvetica Neue,Helvetica,Arial,sans-serif;
+  cursor: pointer;
+  font-size: 9pt;
+  border-radius: 10px;
+}
+
+.JustDish {
+  height: 190px;
+}
+
+.business_name {
+  font-size: 12pt;
+  font-weight: 600;
+}
+
+.caption_text {
+  font-style: italic;
+}
+
+.SampleBusinessDish {
+  height: 160px;
+  font-size: 12pt;
+}
+
+.BusinessDish img, .SampleBusinessDish img, .JustDish img{
+  max-width: 200px;
+  max-height: 135px;
+  margin-bottom: 10px;
+}
+
+.BusinessDish div, .RelatedBusinessDish div {
+  margin: 3px;
+}
+
+.RelatedBusinessDish, .RelatedBusiness {
+  display: inline-block;
+  width: 130px;
+  height: 100px;
+  margin: 10px;
+  padding: 10px;
+ // background-color: #999999;
+  text-align: center;
+  font-size: 9pt;
+  font-family:Helvetica Neue,Helvetica,Arial,sans-serif;
+  cursor: pointer;
+  border-radius: 5px;
+
+}
+
+.RelatedBusinessDish img, .RelatedBusiness img  {
+  max-width: 100px;
+  max-height: 75px;
+}
+
+#related {
+  clear:both;
+}
+
+#page_title {
+  text-align: center;
+  font-size: 64pt;
+}
+
+#page_subtitle {
+  text-align: center;
+  text-decoration: none;
+  font-style: italic;
+}
+
+#home {
+  right: 0;
+  left: 0;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}
+
+#viewer_div {
+  position: fixed;
+  top: 100px;
+  right: 0;
+  left: 0;
+  margin-right: auto;
+  margin-left: auto;
+  width: 600px;
+  height: 525px;
+  padding: 20px;
+  border: 1px solid black;
+  background-color: white;
+  text-align:center;
+  cursor: pointer;
+}
+
+#viewer_div img {
+  margin: 10px;
+  max-height: 500px;
+}
+
+#viewer_controls {
+  position: absolute;
+  bottom: 10px;
+  right: 0;
+  left: 0;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.stars_div {
+  margin-bottom: 10px !important;
+}
+
+.starOn, .starOff, .starHalf {
+  font-size: 12pt;
+  background-color: red;
+  color:white;
+  margin-right: 2px;
+  border-radius: 3px;
+  padding-left: 3px;
+  padding-right: 3px;
+  padding-bottom: 2px;
+}
+
+.starHalf {
+  background-color: #DD9999;
+}
+
+.starOff {
+  background-color: #AAAAAA
+}
+
+.business_info {
+  font-size: 12pt;
+  font-style: italic;
+  margin-bottom: 10px;
+}
