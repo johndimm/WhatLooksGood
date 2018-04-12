@@ -3,7 +3,7 @@ John Dimm
 
 Browse dishes and restaurants from the [Yelp Dataset Challenge](https://www.yelp.com/dataset/challenge).  
 
-The data for this interface appears to have been curated by humans, or produced by very accurate computer vision object recognition, but no humans or neural nets were employed.  In fact, the model was created by analyzing a single source of "found data": user photo caption text.  It identifies objects from the co-occurrence of phrases in caption text, and builds two recommender systems on the binary relation between restaurants and their dishes. 
+The data for this interface may appear to have been curated by humans, or produced by very accurate computer vision object recognition, but no humans or neural nets were employed.  In fact, the model was created by analyzing a single source of "found data": user photo caption text.  It identifies objects from the co-occurrence of phrases in caption text, and builds two recommender systems on the binary relation between restaurants and their dishes. 
 
 http://www.johndimm.com/yelp_db_caption/app/
 
