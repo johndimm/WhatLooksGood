@@ -5,9 +5,16 @@ Browse dishes and restaurants from the [Yelp Dataset Challenge](https://www.yelp
 
 The data for this interface may appear to have been curated by humans, or produced by very accurate computer vision object recognition, but no humans or neural nets were employed.  In fact, the model was created by analyzing a single source of "found data": user photo caption text.  It identifies objects from the co-occurrence of phrases in caption text, and builds two recommender systems on the binary relation between restaurants and their dishes. 
 
-http://www.johndimm.com/yelp_db_caption/app/
+The app:
 
-<img src="http://www.johndimm.com/yelp_db_caption/app/WhatLooksGood_screenshot.png" width=600 />
+  [What Looks Good?](http://www.johndimm.com/yelp_db_caption/app/)
+
+Video demo:
+
+  [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/htsgiLHPzEY/0.jpg)](https://www.youtube.com/watch?v=htsgiLHPzEY)
+
+
+
 
 ## Motivation
 
