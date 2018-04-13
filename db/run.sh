@@ -25,4 +25,5 @@ mysql < reco.sql
 mysql < sample_photo.sql
 
 # Generate recommendations tables.
-mysql < recommendations.sql
+mysql < dish_reco.sql
+mysql < business_reco.sql
