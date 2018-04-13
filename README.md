@@ -11,8 +11,7 @@ The app:
 
 Video demo:
 
-  [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/htsgiLHPzEY/0.jpg)](https://www.youtube.com/watch?v=htsgiLHPzEY)
-
+  [![What Looks Good?](https://youtu.be/NZGu_9aSTa0)](https://youtu.be/NZGu_9aSTa0)
 
 
 
