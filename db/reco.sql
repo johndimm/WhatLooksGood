@@ -17,6 +17,8 @@ begin
     select *
     from dish
     where locate(_dish, dish) > 0
+    order by inside_cnt desc
+    limit 10
     ;
 
     #
@@ -24,13 +26,17 @@ begin
     #
     drop temporary table if exists reldish;
     create temporary table reldish as
-    select db.dish, db.id as dish_id, bd.photo_id, sum(a.cnt + b.cnt) as cnt
-    from business_dish_cnt as a
-    join business_dish_cnt as b
-      on b.business_id = a.business_id
-    join dishes_plus as da on da.id = a.dish_id
-    join dish as db on db.id = b.dish_id
-    join business_dish as bd on bd.business_id=b.business_id and bd.dish_id = b.dish_id
+    select db.dish, db.id as dish_id, bd.photo_id, sum(dbd.cnt) as cnt
+
+    # from business_dish_cnt as a
+    # join business_dish_cnt as b
+    #  on b.business_id = a.business_id
+
+    from dish_business_dish as dbd
+
+    join dishes_plus as da on da.id = dbd.disha_id
+    join dish as db on db.id = dbd.dishb_id
+    join business_dish as bd on bd.business_id=dbd.business_id and bd.dish_id = dbd.dishb_id
     group by db.dish, db.id
     order by cnt desc
     limit 100;
@@ -63,7 +69,7 @@ begin
     #
     select
       _dish, a.dish_id, a.photo_id, d.dish, a.cnt, b.cnt,
-      @factor * a.cnt - b.cnt as score
+      (@factor * a.cnt - b.cnt) / b.cnt as score
     from reldish as a
     join dish_cnt as b on a.dish_id = b.dish_id
     join dish as d on d.id = a.dish_id
@@ -84,48 +90,21 @@ begin
 
     drop temporary table if exists relbus;
     create temporary table relbus as
-    select b.business_id, sum(a.cnt + b.cnt) as cnt
-    from business_dish_cnt as a
-    join business_dish_cnt as b
-      on b.dish_id = a.dish_id
-	where a.business_id=_business_id
-    group by b.business_id
+
+    # select b.business_id, sum(a.cnt + b.cnt) as cnt
+    # from business_dish_cnt as a
+    # join business_dish_cnt as b
+    #   on b.dish_id = a.dish_id
+	# where a.business_id=_business_id
+    # group by b.business_id
+
+    select bdb.businessb_id as business_id, sum(bdb.cnt) as cnt
+    from business_dish_business as bdb
+    where bdb.businessa_id=_business_id
+    group by bdb.businessb_id
+
     order by cnt desc
     limit 100;
-
-    #
-    # Get a sample photo for each business.
-    #
-    drop temporary table if exists sample_photo;
-    create temporary table sample_photo as
-    select business_id, min(photo_id) as photo_id
-    from (
-        #
-        # Get all photos from this business for the sample dish.
-        #
-        select bd.business_id, bd.photo_id from
-        business_dish as bd
-        join (
-            #
-            # Find sample dish.
-            #
-            select bdc.business_id, t.cnt, min(bdc.dish_id) as dish_id
-            from business_dish_cnt as bdc
-            join (
-                #
-                # Find dishes with max count for this business.
-                #
-                select r.business_id, max(bdc.cnt) as cnt
-                from business_dish_cnt as bdc
-                join relbus as r on r.business_id = bdc.business_id
-                group by r.business_id
-            ) as t on t.business_id = bdc.business_id and t.cnt = bdc.cnt
-            group by bdc.business_id
-            order by bdc.business_id
-        ) as t2 on t2.business_id = bd.business_id and t2.dish_id = bd.dish_id
-    ) as t3
-    group by business_id
-    ;
 
     set @global = (
       select sum(business_cnt.cnt)
@@ -143,7 +122,7 @@ begin
     # select @global, @local, @factor;
 
     select
-      d.name, d.id as business_id, sp.photo_id, a.cnt, b.cnt, @factor * a.cnt - b.cnt as score
+      d.name, d.id as business_id, sp.photo_id, a.cnt, b.cnt, (@factor * a.cnt - b.cnt) / b.cnt as score
     from relbus as a
     join business_cnt as b on a.business_id = b.business_id
     #join yelp_db.business as d on d.id = a.business_id
@@ -180,7 +159,7 @@ begin
     join business_dish as bd on bd.business_id=t.business_id and bd.dish_id = t.dish_id
     #join yelp_db.photo as p on p.id = bd.photo_id
     join photo as p on p.id = bd.photo_id
-    group by t.business_name, t.dish
+    group by t.business_name, p.caption
     order by length(p.caption), t.stars desc
     ;
 end //
@@ -195,9 +174,13 @@ begin
   #
   drop temporary table if exists dish_exact;
   create temporary table dish_exact as
-  select dish_id, min(id) as bd_id
-  from business_dish
-  where source = 'exact' and matched = 1
+  select bd.dish_id, min(bd.id) as bd_id
+  from business_dish as bd
+  join dish_cnt as dc on dc.dish_id=bd.dish_id
+  join dish as d on d.id = dc.dish_id
+  where d.source = 'exact' and matched = 1
+  and inside_cnt > 1
+  and dc.cnt > 100
   group by dish_id
   ;
 
