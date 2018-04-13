@@ -7,7 +7,9 @@ create table dish
 (
   id int auto_increment primary key,
   dish varchar(255),
-  source enum('exact','substring')
+  inside_cnt int,
+  source enum('exact','substring'),
+  index idx_dish(inside_cnt)
 );
 
 #
@@ -15,17 +17,32 @@ create table dish
 #  Use only multi-word singletons, to avoid a lot of noise.
 #
 insert into dish
-(dish, source)
-select trim(caption) as dish, 'exact' as source
+(dish, source, inside_cnt)
+select trim(caption) as dish, 'exact' as source, inside_cnt
 from total_caption
 union
-select trim(caption) as dish, 'substring' as source
+select trim(caption) as dish, 'substring' as source, 1 as inside_cnt
 from singleton_phrase
 where length(trim(caption)) > 3
 and length(caption) - length(replace(caption,' ', '')) > 1
 ; 
 
-select * from dish;
+
+#
+# Remove plurals where singular is found.
+# If we have both tacos and taco, keep only taco, 
+# since it will match tacos in captions.
+#
+SET SQL_SAFE_UPDATES = 0;
+delete dish from dish
+join (
+select a.dish as adish, b.dish as bdish, b.id as bid
+from dish as a
+join dish as b on 
+#locate(b.dish, a.dish) > 0
+b.dish = concat(a.dish, 's')
+) as t on t.bid = dish.id
+;
 
 #
 # business -> photo -> dish 
