@@ -314,13 +314,57 @@ var SampleBusinessDish = React.createClass({
 });
 
 //
+// Display the list of related dishes at the top of the dish page.
+//
+var RelatedDishes = React.createClass({
+  displayName: "RelatedDishes",
+
+
+  getInitialState: function () {
+    return { related: [] };
+  },
+
+  componentWillMount: function () {
+    ;
+    this.related(this.props.dish);
+  },
+
+  related: function (dish) {
+    $.ajax({
+      url: "get.php",
+      data: { 'proc': "dish_reco", 'dish': dish },
+      dataType: 'text',
+      cache: false,
+      success: function (dataStr) {
+        var data = JSON.parse(dataStr);
+        this.setState({ related: data });
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error(status, err.toString());
+      }
+    });
+  },
+
+  render: function () {
+    var related = this.state.related.map(function (row, i) {
+      return React.createElement(RelatedBusinessDish, { key: i, data: row });
+    });
+    return React.createElement(
+      "div",
+      { className: "related_stuff_div" },
+      related
+    );
+  }
+});
+
+//
 // The page for a given dish.
 //
 var DishPage = React.createClass({
   displayName: "DishPage",
 
   getInitialState: function () {
-    return { results: [], related: [], dish_name: '', viewerIdx: 0 };
+    return { results: [], dish_name: '', viewerIdx: 0 };
   },
 
   setViewerIdx: function (i) {
@@ -360,40 +404,18 @@ var DishPage = React.createClass({
     });
   },
 
-  related: function (dish) {
-    $.ajax({
-      url: "get.php",
-      data: { 'proc': "dish_reco", 'dish': dish },
-      dataType: 'text',
-      cache: false,
-      success: function (dataStr) {
-        var data = JSON.parse(dataStr);
-        this.setState({ related: data });
-      }.bind(this),
-      error: function (xhr, status, err) {
-        console.error(status, err.toString());
-      }
-    });
-  },
-
   componentWillMount: function () {
     var dish = getParam('dish', 'sushi');
     dish = unescape(dish);
     this.dish = dish;
     console.log("requested dish:" + dish);
     this.search(dish);
-    this.related(dish);
   },
 
   render: function () {
-
     var results = this.state.results.map(function (row, i) {
       return React.createElement(BusinessDish, { key: i, viewerIdx: i, data: row, show_business: true, setViewerIdx: this.setViewerIdx });
     }.bind(this));
-
-    var related = this.state.related.map(function (row, i) {
-      return React.createElement(RelatedBusinessDish, { key: i, data: row });
-    });
 
     return React.createElement(
       "div",
@@ -407,11 +429,7 @@ var DishPage = React.createClass({
           React.createElement("img", { width: "30", src: "home.png" })
         )
       ),
-      React.createElement(
-        "div",
-        { className: "related_stuff_div" },
-        related
-      ),
+      React.createElement(RelatedDishes, { dish: this.dish }),
       React.createElement(
         "div",
         { id: "page_title" },
@@ -428,30 +446,22 @@ var DishPage = React.createClass({
 
 });
 
-//
-// The home page, listing one of each dish.
-//
-var SamplePage = React.createClass({
-  displayName: "SamplePage",
+var RelatedBusinesses = React.createClass({
+  displayName: "RelatedBusinesses",
 
   getInitialState: function () {
-    return { sample: [], viewerIdx: 0 };
+    return { related: [] };
   },
 
-  setViewerIdx: function (i) {
-    this.setState({ viewerIdx: i });
-    $("#viewer_div").css('visibility', 'visible');
-  },
-
-  sample: function (dish) {
+  related: function (dish) {
     $.ajax({
       url: "get.php",
-      data: { 'proc': "dish_sample" },
+      data: { 'proc': "business_reco", 'business_id': this.props.business_id },
       dataType: 'text',
       cache: false,
       success: function (dataStr) {
         var data = JSON.parse(dataStr);
-        this.setState({ sample: data });
+        this.setState({ related: data });
       }.bind(this),
       error: function (xhr, status, err) {
         console.error(status, err.toString());
@@ -460,42 +470,20 @@ var SamplePage = React.createClass({
   },
 
   componentWillMount: function () {
-    this.sample();
+    this.related();
   },
 
   render: function () {
-
-    var sample = this.state.sample.map(function (row, i) {
-      return React.createElement(SampleBusinessDish, { key: i, viewerIdx: i, data: row, setViewerIdx: this.setViewerIdx });
-    }.bind(this));
+    var related = this.state.related.map(function (row, i) {
+      return React.createElement(RelatedBusiness, { key: i, data: row });
+    });
 
     return React.createElement(
       "div",
-      null,
-      React.createElement(
-        "div",
-        { id: "page_title" },
-        "What looks good?"
-      ),
-      React.createElement(
-        "div",
-        { id: "page_subtitle" },
-        "... and can be learned from the ",
-        React.createElement(
-          "a",
-          { href: "https://github.com/johndimm/WhatLooksGood/blob/master/README.md" },
-          "Yelp Dataset Challenge"
-        )
-      ),
-      React.createElement(
-        "div",
-        null,
-        sample
-      ),
-      React.createElement(Viewer, { data: this.state.sample, idx: this.state.viewerIdx })
+      { className: "related_stuff_div" },
+      related
     );
   }
-
 });
 
 //
@@ -547,25 +535,8 @@ var BusinessPage = React.createClass({
     });
   },
 
-  related: function (dish) {
-    $.ajax({
-      url: "get.php",
-      data: { 'proc': "business_reco", 'business_id': this.props.business_id },
-      dataType: 'text',
-      cache: false,
-      success: function (dataStr) {
-        var data = JSON.parse(dataStr);
-        this.setState({ related: data });
-      }.bind(this),
-      error: function (xhr, status, err) {
-        console.error(status, err.toString());
-      }
-    });
-  },
-
   componentWillMount: function () {
     this.dishes();
-    this.related();
     this.businessInfo();
   },
 
@@ -574,10 +545,6 @@ var BusinessPage = React.createClass({
     var dishes = this.state.dishes.map(function (row, i) {
       return React.createElement(BusinessDish, { key: i, viewerIdx: i, data: row, show_business: false, setViewerIdx: this.setViewerIdx });
     }.bind(this));
-
-    var related = this.state.related.map(function (row, i) {
-      return React.createElement(RelatedBusiness, { key: i, data: row });
-    });
 
     var neighborhood = this.state.businessInfo.neighborhood == '' || this.state.businessInfo.neighborhood == null ? '' : this.state.businessInfo.neighborhood + ", ";
     var city = this.state.businessInfo.city == '' ? '' : this.state.businessInfo.city;
@@ -595,11 +562,7 @@ var BusinessPage = React.createClass({
           React.createElement("img", { width: "30", src: "home.png" })
         )
       ),
-      React.createElement(
-        "div",
-        { className: "related_stuff_div" },
-        related
-      ),
+      React.createElement(RelatedBusinesses, { business_id: this.props.business_id }),
       React.createElement(
         "div",
         { id: "page_title" },
@@ -623,13 +586,124 @@ var BusinessPage = React.createClass({
 
 });
 
-function renderRoot(dish, business_id) {
+//
+// The home page, listing one of each dish.
+//
+var SamplePage = React.createClass({
+  displayName: "SamplePage",
+
+  getInitialState: function () {
+    return { sample: [], viewerIdx: 0 };
+  },
+
+  setViewerIdx: function (i) {
+    this.setState({ viewerIdx: i });
+    $("#viewer_div").css('visibility', 'visible');
+  },
+
+  sample: function (dish) {
+    $.ajax({
+      url: "get.php",
+      data: { 'proc': "dish_sample" },
+      dataType: 'text',
+      cache: false,
+      success: function (dataStr) {
+        var data = JSON.parse(dataStr);
+        this.setState({ sample: data });
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error(status, err.toString());
+      }
+    });
+  },
+
+  componentWillMount: function () {
+    this.sample();
+  },
+
+  dishSearch: function () {
+    var searchTerm = $("#dish_search").val();
+    renderRoot(searchTerm, '');
+  },
+
+  keyDown: function (e) {
+    var keyCode = e.keyCode || e.which;
+
+    if (keyCode == 13) {
+      this.dishSearch();
+      return false;
+    }
+  },
+
+  render: function () {
+
+    var sample = this.state.sample.map(function (row, i) {
+      return React.createElement(SampleBusinessDish, { key: i, viewerIdx: i, data: row, setViewerIdx: this.setViewerIdx });
+    }.bind(this));
+
+    return React.createElement(
+      "div",
+      null,
+      React.createElement(
+        "div",
+        { id: "page_title" },
+        "What looks good?"
+      ),
+      React.createElement(
+        "div",
+        { id: "page_subtitle" },
+        "... and can be ",
+        React.createElement(
+          "a",
+          { href: "https://github.com/johndimm/WhatLooksGood/blob/master/README.md" },
+          "learned"
+        ),
+        " from the",
+        React.createElement(
+          "a",
+          { href: "https://www.yelp.com/dataset/challenge" },
+          "Yelp Dataset Challenge"
+        )
+      ),
+      React.createElement(
+        "div",
+        { id: "dish_search_div" },
+        React.createElement("input", { id: "dish_search", type: "text", size: "30", onKeyDown: this.keyDown,
+          autoFocus: true }),
+        " ",
+        React.createElement(
+          "button",
+          { onClick: this.dishSearch },
+          "Search Dishes"
+        )
+      ),
+      React.createElement(
+        "div",
+        null,
+        sample
+      ),
+      React.createElement(Viewer, { data: this.state.sample, idx: this.state.viewerIdx })
+    );
+  }
+
+});
+
+window.onpopstate = function (event) {
+  if (event.state) {
+    replaceContent(event.state.dish, event.state.business_id);
+  }
+};
+
+function replaceContent(dish, business_id) {
   var domContainerNode = window.document.getElementById('content');
   ReactDOM.unmountComponentAtNode(domContainerNode);
 
-  window.history.pushState('', 'What looks good?', '?dish=' + dish + '&business_id=' + business_id);
-
   if (dish != '') ReactDOM.render(React.createElement(DishPage, null), domContainerNode);else if (business_id != '') ReactDOM.render(React.createElement(BusinessPage, { business_id: business_id }), domContainerNode);else ReactDOM.render(React.createElement(SamplePage, null), domContainerNode);
+}
+
+function renderRoot(dish, business_id) {
+  window.history.pushState({ dish: dish, business_id: business_id }, null, '?dish=' + dish + '&business_id=' + business_id);
+  replaceContent(dish, business_id);
 }
 
 function initApp() {
