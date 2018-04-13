@@ -20,14 +20,17 @@ restaurant \
 singleton_phrase \
 total_caption \
 words \
-> yelp_db_caption2.sql \
+> yelp_db_caption2.sql 
 
 mysqldump --routines yelp_db_caption  \
-business_dish_business \ 
+business_dish_business \
 sample_photo \
 > yelp_db_caption3.sql
 
-cat yelp_db_caption.sql | sed "s/ DEFINER=\`accuscore\`@\`localhost\`//" db1.sql
+cat yelp_db_caption.sql | sed "s/ DEFINER=\`accuscore\`@\`localhost\`//" > db1.sql
 cat yelp_db_caption2.sql | sed "s/ DEFINER=\`accuscore\`@\`localhost\`//" > db2.sql
 cat yelp_db_caption3.sql | sed "s/ DEFINER=\`accuscore\`@\`localhost\`//" > db3.sql
  
+rm yelp_db_caption.sql
+rm yelp_db_caption2.sql
+rm yelp_db_caption3.sql
