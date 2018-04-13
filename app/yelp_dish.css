@@ -52,28 +52,31 @@
   font-size: 9pt;
   font-family:Helvetica Neue,Helvetica,Arial,sans-serif;
   cursor: pointer;
-  border-radius: 5px;
-
 }
 
 .RelatedBusinessDish img, .RelatedBusiness img  {
-  max-width: 100px;
-  max-height: 75px;
-}
-
-#related {
-  clear:both;
+  // max-width: 100px;
+  height: 75px;
 }
 
 #page_title {
   text-align: center;
-  font-size: 64pt;
+  font-size: 48pt;
 }
 
 #page_subtitle {
   text-align: center;
   text-decoration: none;
   font-style: italic;
+}
+
+#dish_search_div {
+  margin-top: 10px;
+  right: 0;
+  left: 0;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
 }
 
 #home {
