@@ -1,11 +1,20 @@
-# WhatLooksGood
-John Dimm
+# What Looks Good?
+[John Dimm](http://www.johndimm.com)
 
-Browse dishes and restaurants from the [Yelp Dataset Challenge](https://www.yelp.com/dataset/challenge).  The data for the interface appears to have been curated by humans, or produced by very accurate computer vision object recognition, but no humans or neural nets were employed.  The model was created using only user photo caption text.  It identifies objects from the co-occurrence of phrases in caption text, and builds two recommender systems on the binary relation between restaurants and their dishes. 
+Browse dishes and restaurants from the [Yelp Dataset Challenge](https://www.yelp.com/dataset/challenge).  
 
-http://www.johndimm.com/yelp_db_caption/app/
+The data for this interface may appear to have been curated by humans, or produced by very accurate computer vision object recognition, but no humans or neural nets were employed.  In fact, the model was created by analyzing a single source of "found data": user photo caption text.  It identifies objects from the co-occurrence of phrases in caption text, and builds two recommender systems on the binary relation between restaurants and their dishes. 
 
-<img src="http://www.johndimm.com/yelp_db_caption/app/WhatLooksGood_screenshot.png" width=600 />
+The app:
+
+  [What Looks Good?](http://www.johndimm.com/yelp_db_caption/app/)
+
+Video demo:
+
+[![What Looks Good?](https://img.youtube.com/vi/NZGu_9aSTa0/0.jpg)](https://www.youtube.com/watch?v=NZGu_9aSTa0)
+
+
+
 
 ## Motivation
 
@@ -27,44 +36,45 @@ The cheap trick is to notice that although some people write a comment in the ca
 
 That is a lucky win-win -- the user saves mental energy, we get useful data.
 
-The first step in extracting a list of dishes is to look for multiple captions that match exactly.  If two people have captioned a picture "spam musubi" and posted it to yelp as a food picture, we assume spam musubi is a dish.  What could go wrong?  We found 130 of these.
+The first step in extracting a list of dishes is to look for multiple captions that match exactly.  If two people have captioned a picture "spam musubi" and posted it to yelp as a food picture, we assume spam musubi is a dish.  What could go wrong?  We found 2,451 of these.
 
-    +----+-----------------+--------+
-    | id | dish            | source |
-    +----+-----------------+--------+
-    |  1 | Takoyaki        | exact  |
-    |  2 | Oysters         | exact  |
-    |  3 | Pad Thai        | exact  |
-    |  4 | Chicken Wings   | exact  |
-    |  5 | Fried Chicken   | exact  |
-    |  6 | Pepperoni Pizza | exact  |
-    |  7 | Wings           | exact  |
-    |  8 | Calamari        | exact  |
-    |  9 | Lobster roll    | exact  |
-    | 10 | Burger          | exact  |
+        +----+---------------+------------+--------+
+        | id | dish          | inside_cnt | source |
+        +----+---------------+------------+--------+
+        |  1 | Calamari      |          3 | exact  |
+        |  2 | Pad Thai      |          4 | exact  |
+        |  3 | Oysters       |          4 | exact  |
+        |  4 | Salmon        |          2 | exact  |
+        |  5 | Tiramisu      |          4 | exact  |
+        |  6 | Chicken Wings |          4 | exact  |
+        |  7 | Nachos        |          5 | exact  |
+        |  8 | French toast  |          1 | exact  |
+        |  9 | Salad         |          2 | exact  |
+        | 10 | Takoyaki      |          7 | exact  |
 
 
 ## Natural Language Processing
 
-The second step is to expand that list by looking for noun phrases in captions.  If a caption has a single noun phrase, and there are multiple captions containing the same single noun phrase, assume it is a dish.  Using the NLTK for Python, we found 2,131 of these.
+The second step is to expand that list by looking for noun phrases in captions.  If a caption has a single noun phrase, and there are multiple captions containing the same single noun phrase, assume it is a dish.  Using the NLTK for Python, we added 1,061 phrases to the list of dishes.  Some of them are not useful but the UI works in a way that makes them almost invisible.
 
-    +-----+------------------+-----------+
-    | id  | dish             | source    |
-    +-----+------------------+-----------+
-    | 131 | french toast     | substring |
-    | 132 | caesar salad     | substring |
-    | 133 | chicken salad    | substring |
-    | 134 | eggs benedict    | substring |
-    | 135 | lamb chops       | substring |
-    | 136 | foie gras        | substring |
-    | 137 | chicken sandwich | substring |
-    | 138 | beet salad       | substring |
-    | 139 | pork sandwich    | substring |
-    | 140 | spring rolls     | substring |
+        +------+---------------------+------------+-----------+
+        | id   | dish                | inside_cnt | source    |
+        +------+---------------------+------------+-----------+
+        | 2452 | pork sandwich       |          1 | substring |
+        | 2453 | first time          |          1 | substring |
+        | 2454 | top left            |          1 | substring |
+        | 2455 | bbq ch              |          1 | substring |
+        | 2456 | meat lovers         |          1 | substring |
+        | 2457 | spicy salmon        |          1 | substring |
+        | 2458 | good food           |          1 | substring |
+        | 2459 | lobster mac         |          1 | substring |
+        | 2460 | fish chips          |          1 | substring |
+        | 2461 | complimentary chips |          1 | substring |
+        +------+---------------------+------------+-----------+
 
-## Extending the dish concept
+## The restaurant-dish graph
 
-We have a list of strings that appear to be menu items or dishes.  To apply that information to the full set of captions, search every dish in each caption. If a caption contains the word "burger", we assume it can be usefully shown on the Burger page, even if it does not contain a burger.  (It turns out these exceptions are rare.)  The photo caption also helps out by providing the restaurant where the picture was taken.  We found 63,922 of these matches.
+We have a list of strings that appear to be menu items or dishes.  To apply that information to the full set of captions, search every dish in each caption. If a caption contains the word "burger", we assume it can be usefully shown on the Burger page, even if it does not contain a burger.  (It turns out these exceptions are rare.)  The photo caption also helps out by providing the restaurant where the picture was taken.  We found 177,301 of these matches.  These are the edges of the graphs.
 
     +----+------------------------+---------+-----------+------------------------+---------+
     | id | business_id            | dish_id | source    | photo_id               | matched |
@@ -80,12 +90,21 @@ We have a list of strings that appear to be menu items or dishes.  To apply that
     |  9 | AKBSPjk_H_w8RCqCE_vUuA |     433 | substring | --ifyOhCW51WtECbrsEbbA |       0 |
     | 10 | BjrKNWhtQkedHw8hP_0Bjg |      13 | exact     | --je29Go4V-WYQw0TvtypA |       0 |
 
+## The home page list of dishes
 
-## Restaurants serve dishes
+The home page offers text search, but it's nice to have a list of canned queries as well.  We pick 96 dishes having two features:
+
+  - at least 2 photos from the same restaurant were exactly captioned as the dish
+  
+  - at least 100 restaurants offer this dish
+
+There are a few clinkers in the list:  Food, Yum!, and Yummy.  I'm leaving them in for now, to show the limits of the method, and to avoid adding any ad hoc exceptions for as long as possible.
+
+## Navigation
 
 We now have a set of core dish names along with their photos and restaurants.  We could create a standard search interface.  But the search space is likely to be frustratingly sparse.  Many reasonable queries would give a null response.  
 
-Restaurant search is provided already by yelp.  In this UI, we want to suggest interesting connections rather than requiring you to find them.    
+Restaurant search is provided already by yelp.  In this UI, we want to surface interesting connections.    
 
 Two obvious lists:
 
@@ -93,7 +112,7 @@ Two obvious lists:
   
   - For a restaurant, it's clear we want to show all the dishs available at that restaurant.
   
-Beyond these, we need some way to move directly from one restaurant to another related restaurant.  Same for dishes.  
+Beyond these, we need some way to move directly from one restaurant to another related restaurant.  Same for dishes.  We could try to construct a tree, or take a simpler approach.
 
 ## Recommendations
 
