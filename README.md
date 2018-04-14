@@ -11,7 +11,7 @@ The app:
 
 Video demo:
 
-[![What Looks Good?](https://img.youtube.com/vi/NZGu_9aSTa0/0.jpg)](https://www.youtube.com/watch?v=NZGu_9aSTa0)
+[![What Looks Good?](https://img.youtube.com/vi/Wqey3H7P8PE/0.jpg)](https://www.youtube.com/watch?v=Wqey3H7P8PE)
 
 
 
