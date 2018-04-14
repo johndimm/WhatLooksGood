@@ -3,7 +3,7 @@
 
 Browse dishes and restaurants from the [Yelp Dataset Challenge](https://www.yelp.com/dataset/challenge).  
 
-The data for this interface may appear to have been curated by humans, or produced by very accurate computer vision object recognition, but no humans or neural nets were employed.  In fact, the model was created by analyzing a single source of "found data": user photo caption text.  It identifies objects from the co-occurrence of phrases in caption text, and builds two recommender systems on the binary relation between restaurants and their dishes. 
+The data for this interface may appear to have been curated by humans, or produced by very accurate computer vision object recognition, but no humans or neural nets were employed.  In fact, the model was created by analyzing a single source of found data: user photo caption text.  It identifies "dishes" from the co-occurrence of phrases in caption text, and searches in all caption text for them, creating a graph of the relation between restaurants and their dishes.  The UI relies on two recommender systems built on that relation. 
 
 The app:
 
@@ -18,7 +18,7 @@ Video demo:
 
 ## Motivation
 
-You are hungry for pancakes, so you search breakfast places and scan the photos to see who has the best looking pancakes.  Lots of clicks and navigation.  It would be so much easier if you could see pictures of pancakes from different restaurants on the same page.  
+You are hungry for pancakes, so you search breakfast places and scan the photos to see who has the best looking pancakes.  Lots of clicks and navigation up and down.  It would be so much easier if you could see pictures of pancakes from different restaurants on the same page.  
 
 I want to start my exploration of dining options by asking *what* we want to eat, not *where*.
 
