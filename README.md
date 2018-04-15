@@ -22,6 +22,19 @@ You are hungry for pancakes, so you search breakfast places and scan the photos 
 
 I want to start my exploration of dining options by asking *what* we want to eat, not *where*.
 
+## Data
+
+Data used:
+
+  - photo caption text
+  - the restaurant where a photo was taken
+  - restaurant name, city, rating
+  
+*Not* used:
+
+  - the photos themselves
+  - classification tags associated with restaurants
+
 ## The concept of dish
 
 For this to work, we need to know the object that is shown in a photo.  Photo captions are too specific, often unique.  We need to find a way to extract something that will be the same across multiple restaurants.
