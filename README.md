@@ -24,16 +24,20 @@ I want to start my exploration of dining options by asking *what* we want to eat
 
 ## Data
 
-Data used:
+Data used in analysis:
 
   - photo caption text
   - the restaurant where a photo was taken
-  - restaurant name, city, rating
-  
+
 *Not* used:
 
   - the photos themselves
   - classification tags associated with restaurants
+  - restaurant ratings
+  - user info
+
+The restaurant name, neighborhood, city, and rating are used only for display in the UI, not for analysis.
+  
 
 ## The concept of dish
 
