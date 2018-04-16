@@ -1,4 +1,4 @@
-# What Looks Good?
+# Yelp Dataset Challenge: What Looks Good?
 [John Dimm](http://www.johndimm.com)
 
 Browse dishes and restaurants from the [Yelp Dataset Challenge](https://www.yelp.com/dataset/challenge).  
