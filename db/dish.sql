@@ -95,15 +95,16 @@ group by business_id
 ;
 
 #
-# Count the total number of businesses for a given dish.
+# Count the total number of photos and businesses for a given dish.
 #
 drop table if exists dish_cnt;
 create table dish_cnt as
-select dish_id, count(*) cnt
-from business_dish
+select dish_id, count(*) cnt, count(distinct name) bus_name_cnt
+from business_dish as bd
+join business as b on b.id = bd.business_id
 group by dish_id
+order by bus_name_cnt desc
 ;
-
 #
 # Grand total of all dish photos.
 #
