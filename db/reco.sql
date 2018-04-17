@@ -18,7 +18,7 @@ begin
     from dish
     where locate(_dish, dish) > 0
     order by inside_cnt desc
-    limit 10
+    limit 20
     ;
 
     #
@@ -74,7 +74,7 @@ begin
     join dish_cnt as b on a.dish_id = b.dish_id
     join dish as d on d.id = a.dish_id
     order by score desc
-    limit 10;
+    limit 14;
 end //
 delimiter ;
 
@@ -130,7 +130,7 @@ begin
     join sample_photo as sp on sp.business_id = d.id
     group by d.name
     order by score desc
-    limit 10;
+    limit 14;
 end //
 delimiter ;
 
@@ -169,36 +169,63 @@ drop procedure if exists dish_sample;
 delimiter //
 create procedure dish_sample(_dummy varchar(255))
 begin
-  #
-  # Get the first photo of each exact dish.
-  #
+    select *
+    from dish_sample
+    order by dish;
+end //
+delimiter ;
+
+drop procedure if exists gen_dish_sample;
+delimiter //
+create procedure gen_dish_sample()
+begin
+
+    drop table if exists stopwords;
+    create table stopwords
+    (
+      word varchar(255)
+    );
+    insert into stopwords
+    (word)
+    values ('Lunch'), ('Food'), ('Amazing'), ('Decor'), ('Platter'),
+		  ('So good'), ('Tasty'), ('Yum'), ('Nice'), ('menu'), ('Mmmm'),
+		  ('good'), ('club'), ('Dinner'), ('great food');
+
   drop temporary table if exists dish_exact;
   create temporary table dish_exact as
-  select bd.dish_id, min(bd.id) as bd_id
-  from business_dish as bd
-  join dish_cnt as dc on dc.dish_id=bd.dish_id
-  join dish as d on d.id = dc.dish_id
-  where d.source = 'exact' and matched = 1
-  and inside_cnt > 1
-  and dc.cnt > 100
-  group by dish_id
-  ;
+    select t.dish, t.dish_id, min(t.business_id) as business_id,
+      min(photo_id) as photo_id, count(*) as cnt
+    from (
+        select d.dish, d.id as dish_id, b.name, min(b.id) as business_id
+        from dish as d
+        join business_dish_cnt as bdc on bdc.dish_id = d.id
+        join business as b on b.id=bdc.business_id
+        join business_dish as bd on bd.dish_id=bdc.dish_id and bd.business_id = bdc.business_id
+        # left join stopwords on stopwords.word = d.dish
+        where d.source = 'exact'
+        # and stopwords.word is null
+        and matched = 1
+		and locate('website', d.dish) = 0
+		and locate('Yum', d.dish) != 1
+        group by b.name
+    ) as t
+	join business_dish as bd on bd.business_id=t.business_id and bd.dish_id = t.dish_id
+    group by t.dish_id
+    having cnt > 8
+    order by cnt desc
+    ;
 
-  #
-  # Gather the rest of the data.
-  #
+  select count(distinct business_id) from dish_exact;
+
+  drop table if exists dish_sample;
+  create table dish_sample as
   select
-    dish, bd.dish_id, b.id as business_id, photo_id,
-    caption, b.name as business_name, stars
+    de.dish, de.dish_id, de.business_id, de.photo_id,
+    p.caption, b.name as business_name, b.stars
   from dish_exact as de
-  join dish as d on d.id = de.dish_id
-  join business_dish as bd on bd.id = de.bd_id and bd.matched = 1
-  #join yelp_db.business as b on b.id = bd.business_id
-  join business as b on b.id = bd.business_id
-  #join yelp_db.photo as p on p.id = bd.photo_id
-  join photo as p on p.id = bd.photo_id
-  group by dish_id
-  order by dish
+  join photo as p on p.id=de.photo_id
+  join business as b on b.id=de.business_id
+  order by de.dish
   ;
 end //
 delimiter ;
@@ -229,5 +256,19 @@ begin
   #select * from yelp_db.business where id = _business_id
   select * from business where id = _business_id
   ;
+end //
+delimiter ;
+
+drop procedure if exists dishes;
+delimiter //
+create procedure dishes(_dummy int)
+begin
+  #
+  # Show all dishes, but filter out the ones starting with $ or a number.
+  #
+  select dish
+  from dish
+  where dish >= "A"
+  order by dish;
 end //
 delimiter ;
