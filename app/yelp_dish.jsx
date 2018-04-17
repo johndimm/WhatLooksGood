@@ -31,9 +31,9 @@ var Stars = React.createClass({
     var halfNeeded = (stars - num == 0.5);
     var dummy = Array();
     for (var i=1; i<=5; i++) {
-      if (i < num)
+      if (i <= num)
         dummy.push("starOn");
-      else if (i == num && halfNeeded)
+      else if (i == num + 1 && halfNeeded)
         dummy.push("starHalf");
       else
         dummy.push("starOff");
@@ -265,7 +265,7 @@ var SampleBusinessDish = React.createClass({
   render: function() {
        var row = this.props.data;
        this.url = getPhotoUrl(row['photo_id']);
-       this.dish = row['caption'];
+       this.dish = row['dish'];
        return (
          <div className='SampleBusinessDish'>
            <img src={this.url} onClick={this.setViewerIdx}/>
@@ -381,7 +381,7 @@ var DishPage = React.createClass({
     return (
     <div>
       <div id="home">
-        <a href="javascript:location.search=''"><img width='30' src="home.png" /></a>
+        <a href="javascript:renderRoot('','')"><img width='30' src="home.png" /></a>
       </div>
       <RelatedDishes dish={this.dish} />
       <div id="page_title">{this.dish}</div>
@@ -493,6 +493,7 @@ var BusinessPage = React.createClass({
        )
     }.bind(this));
 
+
     var neighborhood = this.state.businessInfo.neighborhood == ''
       || this.state.businessInfo.neighborhood == null ? ''
       : this.state.businessInfo.neighborhood + ", ";
@@ -500,6 +501,9 @@ var BusinessPage = React.createClass({
       : this.state.businessInfo.city;
     var business_name = this.state.businessInfo.name == '' ? ''
       : this.state.businessInfo.name;
+
+    var yelpLink = "https://www.yelp.com/search?find_desc=" + escape(business_name)
+      + "&find_loc=" + escape(city) + "&ns=1";
 
     return (
     <div>
@@ -509,7 +513,7 @@ var BusinessPage = React.createClass({
       <RelatedBusinesses business_id={this.props.business_id} />
 
       <div id="page_title">
-        {business_name}
+        <a href={yelpLink} target="YELP_WINDOW">{business_name}</a>
         <div className='business_info'>
           {neighborhood}{city}
         </div>
@@ -563,6 +567,10 @@ var SamplePage = React.createClass({
     renderRoot(searchTerm, '');
   },
 
+  dishSearchAuto: function(searchTerm) {
+    renderRoot(searchTerm['value'], '');
+  },
+
   keyDown: function(e) {
     var keyCode = e.keyCode || e.which;
 
@@ -590,8 +598,7 @@ var SamplePage = React.createClass({
       </div>
 
       <div id="dish_search_div">
-        <input id="dish_search" type="text" size="30" onKeyDown={this.keyDown}
-        autoFocus/> <button onClick={this.dishSearch}>Search Dishes</button>
+        Dishes: <MyInput onSelect={this.dishSearchAuto} />
       </div>
 
       <div>{sample}</div>
@@ -601,6 +608,61 @@ var SamplePage = React.createClass({
   }
 
 });
+
+
+class MyInput extends React.Component {
+
+  constructor (props) {
+    super(props)
+    this.state = {
+      value: '',
+      items: []
+    }
+  }
+
+  componentWillMount() {
+
+    $.ajax({
+      url: "get.php",
+      data: {'proc':"dishes"},
+      dataType: 'text',
+      cache: false,
+      success: function(dataStr) {
+        var data = JSON.parse(dataStr);
+        var items = data.map(function(key, i) {
+         return { id: key['dish'], label: key['dish'] };
+        });
+        this.setState({items: items});
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(status, err.toString());
+      }
+    });
+
+  }
+
+  render() {
+
+    return (
+      <ReactAutocomplete
+        items={this.state.items}
+        shouldItemRender={(item, value) => item.label.toLowerCase().indexOf(value.toLowerCase()) > -1}
+        getItemValue={item => item.label}
+        renderItem={(item, highlighted) =>
+          <div
+            key={item.id}
+            style={{ backgroundColor: highlighted ? '#eee' : 'transparent'}}
+          >
+            {item.label}
+          </div>
+        }
+        value={this.state.value}
+        onChange={e => this.setState({ value: e.target.value })}
+        onSelect={value => this.props.onSelect({ value })}
+      />
+    )
+  }
+}
 
 window.onpopstate = function (event) {
   if(event.state) {
