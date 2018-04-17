@@ -1,9 +1,9 @@
-# What Looks Good?
+# Yelp Dataset Challenge: What Looks Good?
 [John Dimm](http://www.johndimm.com)
 
 Browse dishes and restaurants from the [Yelp Dataset Challenge](https://www.yelp.com/dataset/challenge).  
 
-The data for this interface may appear to have been curated by humans, or produced by very accurate computer vision object recognition, but no humans or neural nets were employed.  In fact, the model was created by analyzing a single source of "found data": user photo caption text.  It identifies objects from the co-occurrence of phrases in caption text, and builds two recommender systems on the binary relation between restaurants and their dishes. 
+The data for this interface may appear to have been curated by humans, or produced by very accurate computer vision object recognition, but no humans or neural nets were employed.  In fact, the model was created by analyzing a single source of found data: user photo caption text.  It identifies "dishes" from the co-occurrence of phrases in caption text, and searches in all caption text for them, creating a graph of the relation between restaurants and their dishes.  The UI relies on two recommender systems built on that relation. 
 
 The app:
 
@@ -11,16 +11,33 @@ The app:
 
 Video demo:
 
-[![What Looks Good?](https://img.youtube.com/vi/NZGu_9aSTa0/0.jpg)](https://www.youtube.com/watch?v=NZGu_9aSTa0)
+[![What Looks Good?](https://img.youtube.com/vi/Y24Twfjq2Po/0.jpg)](https://www.youtube.com/watch?v=Y24Twfjq2Po)
 
 
 
 
 ## Motivation
 
-You are hungry for pancakes, so you search breakfast places and scan the photos to see who has the best looking pancakes.  Lots of clicks and navigation.  It would be so much easier if you could see pictures of pancakes from different restaurants on the same page.  
+You are hungry for pancakes, so you search breakfast places and scan the photos to see who has the best looking pancakes.  Lots of clicks and navigation up and down.  It would be so much easier if you could see pictures of pancakes from different restaurants on the same page.  
 
 I want to start my exploration of dining options by asking *what* we want to eat, not *where*.
+
+## Data
+
+Data used in analysis:
+
+  - photo caption text
+  - the restaurant where a photo was taken
+
+*Not* used:
+
+  - the photos themselves
+  - classification tags associated with restaurants
+  - restaurant ratings
+  - user info
+
+The restaurant name, neighborhood, city, and rating are used only for display in the UI, not for analysis.
+  
 
 ## The concept of dish
 
