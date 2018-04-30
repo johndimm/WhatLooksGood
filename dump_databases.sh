@@ -25,6 +25,7 @@ words \
 mysqldump --routines yelp_db_caption  \
 business_dish_business \
 sample_photo \
+dish_sample \
 > yelp_db_caption3.sql
 
 cat yelp_db_caption.sql | sed "s/ DEFINER=\`accuscore\`@\`localhost\`//" > db1.sql
