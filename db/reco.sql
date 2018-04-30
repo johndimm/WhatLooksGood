@@ -181,7 +181,8 @@ create procedure gen_dish_sample()
 begin
 
     drop table if exists stopwords;
-    create table stopwords
+    drop temporary table if exists stopwords;
+    create temporary table stopwords
     (
       word varchar(255)
     );
@@ -189,44 +190,32 @@ begin
     (word)
     values ('Lunch'), ('Food'), ('Amazing'), ('Decor'), ('Platter'),
 		  ('So good'), ('Tasty'), ('Yum'), ('Nice'), ('menu'), ('Mmmm'),
-		  ('good'), ('club'), ('Dinner'), ('great food');
+		  ('good'), ('club'), ('Dinner'), ('great food'), ('Delicious');
 
-  drop temporary table if exists dish_exact;
-  create temporary table dish_exact as
-    select t.dish, t.dish_id, min(t.business_id) as business_id,
-      min(photo_id) as photo_id, count(*) as cnt
-    from (
-        select d.dish, d.id as dish_id, b.name, min(b.id) as business_id
+
+  drop table if exists dish_sample;
+  create table dish_sample as
+#    select d.dish, d.id as dish_id, p.id as photo_id,
+#       p.caption, b.name as business_name, b.stars,
+#      count(*) as cnt
+
+		select d.dish, d.id as dish_id, b.name, p.id as photo_id, p.caption, bd.business_id
+        , count(*) as cnt, count(distinct b.name) as cnt_business
         from dish as d
         join business_dish_cnt as bdc on bdc.dish_id = d.id
         join business as b on b.id=bdc.business_id
         join business_dish as bd on bd.dish_id=bdc.dish_id and bd.business_id = bdc.business_id
-        # left join stopwords on stopwords.word = d.dish
+        join photo as p on p.id=bd.photo_id
+        left join stopwords on stopwords.word = d.dish
         where d.source = 'exact'
-        # and stopwords.word is null
+        and stopwords.word is null
         and matched = 1
+        #and dish='butter'
 		and locate('website', d.dish) = 0
 		and locate('Yum', d.dish) != 1
-        group by b.name
-    ) as t
-	join business_dish as bd on bd.business_id=t.business_id and bd.dish_id = t.dish_id
-    group by t.dish_id
-    having cnt > 8
-    order by cnt desc
+        group by dish
+        having cnt_business > 12
     ;
-
-  select count(distinct business_id) from dish_exact;
-
-  drop table if exists dish_sample;
-  create table dish_sample as
-  select
-    de.dish, de.dish_id, de.business_id, de.photo_id,
-    p.caption, b.name as business_name, b.stars
-  from dish_exact as de
-  join photo as p on p.id=de.photo_id
-  join business as b on b.id=de.business_id
-  order by de.dish
-  ;
 end //
 delimiter ;
 
