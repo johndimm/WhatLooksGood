@@ -4,12 +4,11 @@ create table food_phrases as
 select caption, sum(cnt) as num_photos, count(*) as cnt
 from
 (
-    select b.name, word as caption, count(*) as cnt
+    select b.name, cleanDish(word) as caption, count(*) as cnt
     from words
     join yelp_db.business as b on b.id=words.business_id
-    group by b.name, word
+    group by b.name, caption
     having cnt = 1
-    #order by cnt desc
 ) as t
 where  length(caption) > 2
 and length(caption) - length(replace(caption, ' ','')) < 3
