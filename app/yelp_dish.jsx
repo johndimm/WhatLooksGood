@@ -63,13 +63,15 @@ var Business = React.createClass({
 
     if (this.props.business_name == '')
       return ( null )
-    else
+    else {
+      var stars = this.props.stars != null ? ( <Stars num={this.props.stars} /> ) : null;
       return (
           <div className='business_name' onClick={this.onClickBusiness}>
                  {this.props.business_name}
-                 <Stars num={this.props.stars} />
+                 {stars}
           </div>
       )
+    }
   }
 });
 
@@ -156,9 +158,9 @@ var Viewer = React.createClass({
            </div>
 
            <div id="viewer_controls">
-           <span onClick={this.previous} style={{'marginRight':'10px'}}>previous</span>
-           <span onClick={this.close} style={{'marginRight':'10px'}}>close</span>
-           <span onClick={this.next}>next</span>
+           <button onClick={this.previous}>previous</button>
+           <button onClick={this.close}>close</button>
+           <button onClick={this.next}>next</button>
            </div>
          </div>
        )
