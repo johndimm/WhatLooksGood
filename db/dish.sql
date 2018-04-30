@@ -12,19 +12,20 @@ create table dish
   index idx_dish(inside_cnt)
 );
 
+
 #
 #  Combined whole captions with singleton phrases.
 #  Use only multi-word singletons, to avoid a lot of noise.
 #
 insert into dish
 (dish, source, inside_cnt)
-select trim(caption) as dish, 'exact' as source, inside_cnt
+select caption as dish, 'exact' as source, inside_cnt
 from total_caption
 union
-select trim(caption) as dish, 'substring' as source, 1 as inside_cnt
+select caption as dish, 'substring' as source, 1 as inside_cnt
 from singleton_phrase
-where length(trim(caption)) > 3
-and length(caption) - length(replace(caption,' ', '')) > 1
+where length(caption) > 3
+and length(caption) - length(replace(caption,' ', '')) > 0
 ; 
 
 
@@ -58,6 +59,11 @@ create table business_dish (
 );
 
 
+#
+# Find all captions that contain a dish.
+# The dish text needs to be at the start, or after a space.
+# Too bad mysql does not do regex.
+#
 insert into business_dish
 (business_id, dish_id, source, photo_id, matched)
 select
@@ -65,7 +71,10 @@ select
   (dish.dish = photo.caption) as matched
 from dish
 #join yelp_db.photo on locate(dish.dish, photo.caption) > 0
-join photo on locate(dish.dish, photo.caption) > 0
+join photo on (
+  locate(dish.dish, photo.caption) = 1
+  or locate(concat(' ',dish.dish), photo.caption) > 0
+)
 ;
 
 create index idx_bd1 on business_dish(business_id);
