@@ -1,9 +1,9 @@
 # Yelp Dataset Challenge: What Looks Good?
 [John Dimm](http://www.johndimm.com)
 
-Browse dishes and restaurants from the [Yelp Dataset Challenge](https://www.yelp.com/dataset/challenge).  
+Browse linked photos of dishes from the [Yelp Dataset Challenge](https://www.yelp.com/dataset/challenge).  
 
-The data for this interface may appear to have been curated by humans, or produced by very accurate computer vision object recognition, but no humans or neural nets were employed.  In fact, the model was created by analyzing a single source of found data: user photo caption text.  It identifies "dishes" from the co-occurrence of phrases in caption text, and searches in all caption text for them, creating a graph of the relation between restaurants and their dishes.  The UI relies on two recommender systems built on that relation. 
+The model was created by analyzing a single source of found data: user photo caption text.  It identifies "dishes" from the co-occurrence of phrases in caption text, and searches in all caption text for them, creating a graph of the relation between restaurants and their dishes.  The UI relies on two recommender systems built on that relation. 
 
 The app:
 
