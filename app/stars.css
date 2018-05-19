@@ -1,0 +1,22 @@
+.stars_div {
+  margin-bottom: 10px !important;
+}
+
+.starOn, .starOff, .starHalf {
+  font-size: 12pt;
+  background-color: red;
+  color:white;
+  margin-right: 2px;
+  border-radius: 3px;
+  padding-left: 3px;
+  padding-right: 3px;
+  padding-bottom: 2px;
+}
+
+.starHalf {
+  background-color: #DD9999;
+}
+
+.starOff {
+  background-color: #AAAAAA;
+}
