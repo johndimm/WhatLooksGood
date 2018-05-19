@@ -1,4 +1,3 @@
-
 function getParam(key, defaultValue) {
     var value = defaultValue;
 
@@ -383,7 +382,7 @@ var DishPage = React.createClass({
     return (
     <div>
       <div id="home">
-        <a href="javascript:renderRoot('','')"><img width='30' src="home.png" /></a>
+        <a href="javascript:window.renderRoot('','')"><img width='30' src="home.png" /></a>
       </div>
       <RelatedDishes dish={this.dish} />
       <div id="page_title">{this.dish}</div>
@@ -673,7 +672,7 @@ window.onpopstate = function (event) {
 }
 
 function replaceContent(dish, business_id) {
-  var domContainerNode = window.document.getElementById('content');
+  var domContainerNode = window.document.getElementById('root');
   ReactDOM.unmountComponentAtNode(domContainerNode);
 
   if (dish != '')
@@ -691,8 +690,12 @@ function renderRoot(dish, business_id) {
 }
 
 
-function initApp() {
+$(document).ready (function() {
   var dish = getParam('dish', '');
   var business_id = getParam('business_id', '');
   renderRoot(dish, business_id);
-}
+});
+
+// Attach this function to the window object so it can be called
+// from href="javascript:window.renderRoot..."
+window.renderRoot = renderRoot;
