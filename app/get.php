@@ -15,17 +15,13 @@ function printJSON($db, $sql) {
 }
 
 function main() {
-//  echo '[{"url":"http://www.johndimm.com/photos/2014/10/IMG_20141019_133156.jpg", "caption":"", "rating":"good", "rotation":0}]';
-//  return;
-
   include "db.php";
   $db = dbInit();
 
   $sql = '';
-  $dish = getParam('dish', "beef");
-  $proc = getParam('proc', 'business_reco');
-  $business_id = getParam('business_id', '');
-  $param = $business_id == '' ? $dish : $business_id;
+
+  $proc = getParam('proc', '');
+  $param = getParam('param', '');
 
   $sql = "call $proc('$param')";
   printJSON($db, $sql);
