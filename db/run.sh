@@ -15,8 +15,14 @@ mysql < load.sql
 # Find phrases that are the only phrase in many captions.
 mysql < singleton_phrase.sql
 
+# Create tables.
+mysql < tables.sql
+
 # Create dish, count tables.
 mysql < dish.sql
+
+# Generate some counts.
+mysql < count.sql
 
 # Stored procedures for retrieval.
 mysql < reco.sql
