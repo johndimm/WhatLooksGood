@@ -292,7 +292,7 @@ var RelatedDishes = React.createClass({
   related: function(dish) {
     $.ajax({
       url: "get.php",
-      data: {'proc':"dish_reco", 'dish': dish},
+      data: {'proc':"dish_reco", 'param': dish},
       dataType: 'text',
       cache: false,
       success: function(dataStr) {
@@ -350,7 +350,7 @@ var DishPage = React.createClass({
   search: function(dish) {
     $.ajax({
       url: "get.php",
-      data: {'proc': "dish_search", 'dish': dish},
+      data: {'proc': "dish_search", 'param': dish},
       dataType: 'text',
       cache: false,
       success: function(dataStr) {
@@ -402,7 +402,7 @@ var RelatedBusinesses = React.createClass({
   related: function(dish) {
     $.ajax({
       url: "get.php",
-      data: {'proc': "business_reco", 'business_id': this.props.business_id},
+      data: {'proc': "business_reco", 'param': this.props.business_id},
       dataType: 'text',
       cache: false,
       success: function(dataStr) {
@@ -449,7 +449,7 @@ var BusinessPage = React.createClass({
   businessInfo: function(dish) {
     $.ajax({
       url: "get.php",
-      data: {'proc': "business_info", 'business_id': this.props.business_id},
+      data: {'proc': "business_info", 'param': this.props.business_id},
       dataType: 'text',
       cache: false,
       success: function(dataStr) {
@@ -467,7 +467,7 @@ var BusinessPage = React.createClass({
   dishes: function(dish) {
     $.ajax({
       url: "get.php",
-      data: {'proc': "business_dishes", 'business_id': this.props.business_id},
+      data: {'proc': "business_dishes", 'param': this.props.business_id},
       dataType: 'text',
       cache: false,
       success: function(dataStr) {
